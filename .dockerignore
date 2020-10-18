@@ -1,4 +1,4 @@
 apps/media
-venv
 */.git
 */.idea
+*/.env
