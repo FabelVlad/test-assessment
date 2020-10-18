@@ -25,7 +25,7 @@ Heroku
   - heroku container:push web -a `app_name`
   - heroku container:release web -a `app_name`
   - heroku run python manage.py migrate -a `app_name`
-  - heroku run python manage.py createsuperuser -a `app_name`
+  - heroku run python manage.py createsuperuser -a `app_name` (do not forget login and password, use it in Postman auth)
 - open `https://app_name.herokuapp.com/api/v1/`
  
 Postman

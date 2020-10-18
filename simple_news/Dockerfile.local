@@ -21,7 +21,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # install environment dependencies
 RUN pip3 install pipenv==2020.8.13
-RUN pipenv install --system --deploy --ignore-pipfile
-RUN python manage.py collectstatic --noinput
-
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --log-file -
+RUN pipenv install --dev --system --deploy --skip-lock
