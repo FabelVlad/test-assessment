@@ -32,6 +32,7 @@ services:
   celery-x:
     build:
       context: ./simple_news
+      dockerfile: Dockerfile.local
     container_name: 'celery-x'
     restart: on-failure
     command: celery -A config worker -B -l info
@@ -43,7 +44,7 @@ services:
   web:
     build:
       context: ./simple_news
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     container_name: 'django-news'
     restart: on-failure
     command: bash -c "sleep 7 && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload"
