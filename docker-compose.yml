@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: nginx
+    container_name: 'nginx-x'
+    restart: on-failure
+    volumes:
+      - media_volume:/web/apps/media
+      - static_volume:/web/apps/staticfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+  postgres:
+    image: postgres:12.0-alpine
+    container_name: 'postgres_v12-alp'
+    restart: on-failure
+    volumes:
+      - postgresql-volume:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=webnews
+#  redis:
+#    image: redis
+#    restart: on-failure
+#    container_name: 'redis'
+#    command: redis-server
+#    ports:
+#      - 6379:6379
+#  celery:
+#    build:
+#      context: ./simple_news
+#    container_name: 'celery'
+#    restart: on-failure
+#    command: celery -A config worker -B -l info
+#    volumes:
+#      - .:/game_store
+#    links:
+#      - redis
+#    depends_on:
+#      - web
+#      - redis
+  web:
+    build:
+      context: ./simple_news
+      dockerfile: Dockerfile
+    container_name: 'django-news'
+    restart: on-failure
+    command: bash -c "sleep 7 && python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --reload"
+    volumes:
+      - ./simple_news:/web
+      - media_volume:/web/apps/media
+      - static_volume:/web/apps/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - simple_news/.env
+    depends_on:
+      - postgres
+volumes:
+  postgresql-volume:
+  static_volume:
+  media_volume:

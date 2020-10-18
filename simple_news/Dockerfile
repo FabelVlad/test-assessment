@@ -1,0 +1,26 @@
+# Base Image
+FROM python:3.7.9-slim-buster
+
+# create and set working directory
+RUN mkdir /web /web/apps /web/apps/staticfiles
+WORKDIR /web
+
+# add current directory code to working directory
+ADD . /web/
+
+# set default environment variables
+ENV PYTHONUNBUFFERED 1 \
+    PYTHONDONTWRITEBYTECODE 1 \
+    PORT=8000
+
+# Install system dependencies
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        tzdata \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# install environment dependencies
+RUN pip3 install pipenv==2020.8.13
+RUN pipenv install --dev --system --deploy --ignore-pipfile
+
+#CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --log-file -

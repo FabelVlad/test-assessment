@@ -1,0 +1,4 @@
+apps/media
+venv
+*/.git
+*/.idea
