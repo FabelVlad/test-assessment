@@ -1,0 +1,17 @@
+build:
+  docker:
+    web: Dockerfile
+    worker: Dockerfile
+release:
+  command:
+    - python manage.py migrate
+  image: web
+run:
+  web:
+    command:
+      - gunicorn config.wsgi --log-file -
+    image: web
+  worker:
+    command:
+      - celery -A config worker -B -l info
+    image: worker
