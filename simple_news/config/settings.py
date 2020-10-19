@@ -14,7 +14,6 @@ import os
 from environ import environ
 
 # Build paths
-
 ROOT_DIR = environ.Path(__file__) - 2
 APPS_DIR = ROOT_DIR.path('apps')
 
@@ -178,13 +177,9 @@ if DEBUG:
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
-    'DEFAULT_PERMISSION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': ['apps.common.permissions.IsOwnerOrReadOnly', ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
-if DEBUG is False:
-    REST_FRAMEWORK.update({
-        'DEFAULT_PERMISSION_CLASSES': ['apps.common.permissions.IsOwnerOrReadOnly', ]
-    })
 
 # Celery settings
 # https://docs.celeryproject.org/en/stable/index.html

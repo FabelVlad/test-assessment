@@ -9,10 +9,6 @@ from apps.news.models import Post
 
 @periodic_task(run_every=(timezone.timedelta(hours=24)))
 def reset_post_upvotes_count_task():
+    """ counts and sets the amount of upvotes every 24 hours """
     Post.objects.update(
         amount_of_upvotes=Subquery(Post.objects.filter(id=OuterRef('id')).values(upvotes_count=Count('postvotes'))[:1]))
-
-
-@periodic_task(run_every=(timezone.timedelta(minutes=2)))
-def raise_val_error():
-    raise ValueError

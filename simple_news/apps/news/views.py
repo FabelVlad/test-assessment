@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.common.permissions import IsOwnerOrReadOnly
 from apps.news.models import PostVote, Post, Comment
 from apps.news.serializers import PostSerializer, CommentSerializer
 
@@ -12,8 +12,6 @@ from apps.news.serializers import PostSerializer, CommentSerializer
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    # permission_classes = [IsOwnerOrReadOnly, ]
-    # lookup_field = 'pk'
 
     def perform_create(self, serializer):
         serializer.save(author_name=self.request.user)
@@ -33,7 +31,10 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    # permission_classes = [IsOwnerOrReadOnly, ]
 
     def perform_create(self, serializer):
         serializer.save(author_name=self.request.user)
+
+
+def redirect_to_api_root(request):
+    return redirect('/api/v1/', permanent=True)

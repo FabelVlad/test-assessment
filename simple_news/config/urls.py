@@ -17,12 +17,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from apps.news.views import redirect_to_api_root
 from config import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='api-auth')),
-    path('api/v1/', include('apps.news.urls', namespace='api'))
+    path('api/v1/', include('apps.news.urls', namespace='api')),
+    path('', redirect_to_api_root)
 ]
 
 if settings.DEBUG:
